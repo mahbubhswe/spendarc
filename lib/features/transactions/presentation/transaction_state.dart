@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../core/failure.dart';
 import '../data/transaction_model.dart';
 
 enum TransactionFilter { all, income, expense }
@@ -7,34 +8,32 @@ enum TransactionFilter { all, income, expense }
 class TransactionState extends Equatable {
   final List<TransactionModel> transactions;
   final TransactionFilter filter;
-  final String? errorMessage;
+  final Failure? failure;
 
   const TransactionState({
     required this.transactions,
     required this.filter,
-    required this.errorMessage,
+    required this.failure,
   });
 
   factory TransactionState.initial() {
     return const TransactionState(
       transactions: [],
       filter: TransactionFilter.all,
-      errorMessage: null,
+      failure: null,
     );
   }
 
   TransactionState copyWith({
     List<TransactionModel>? transactions,
     TransactionFilter? filter,
-    String? errorMessage,
-    bool clearErrorMessage = false,
+    Failure? failure,
+    bool clearFailure = false,
   }) {
     return TransactionState(
       transactions: transactions ?? this.transactions,
       filter: filter ?? this.filter,
-      errorMessage: clearErrorMessage
-          ? null
-          : (errorMessage ?? this.errorMessage),
+      failure: clearFailure ? null : (failure ?? this.failure),
     );
   }
 
@@ -50,5 +49,5 @@ class TransactionState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [transactions, filter, errorMessage];
+  List<Object?> get props => [transactions, filter, failure];
 }

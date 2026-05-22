@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/failure.dart';
 import '../data/transaction_model.dart';
 import '../domain/transaction_usecases.dart';
 import 'transaction_state.dart';
@@ -48,10 +49,15 @@ class TransactionCubit extends Cubit<TransactionState> {
   }
 
   bool addTransaction(String title, double amount, bool isExpense) {
+    if (title.trim().isEmpty || amount <= 0) {
+      emit(state.copyWith(failure: Failure('Invalid transaction input')));
+      return false;
+    }
+
     if (isExpense && amount > totalBalance) {
       emit(
         state.copyWith(
-          errorMessage: 'Expense cannot be greater than current balance',
+          failure: Failure('Expense cannot be greater than current balance'),
         ),
       );
       return false;
@@ -68,7 +74,7 @@ class TransactionCubit extends Cubit<TransactionState> {
     addTransactionUseCase(transaction);
 
     loadTransactions();
-    emit(state.copyWith(clearErrorMessage: true));
+    emit(state.copyWith(clearFailure: true));
     return true;
   }
 
@@ -84,11 +90,11 @@ class TransactionCubit extends Cubit<TransactionState> {
     loadTransactions();
   }
 
-  void clearErrorMessage() {
-    if (state.errorMessage == null) {
+  void clearFailure() {
+    if (state.failure == null) {
       return;
     }
 
-    emit(state.copyWith(clearErrorMessage: true));
+    emit(state.copyWith(clearFailure: true));
   }
 }

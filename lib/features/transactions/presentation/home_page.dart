@@ -17,12 +17,12 @@ class HomePage extends StatelessWidget {
 
   void _openAddTransactionSheet(BuildContext context) {
     final cubit = context.read<TransactionCubit>();
-    cubit.clearErrorMessage();
+    cubit.clearFailure();
 
     AddTransactionSheet.show(
       context,
       validationMessageBuilder: () =>
-          context.read<TransactionCubit>().state.errorMessage,
+          context.read<TransactionCubit>().state.failure?.message,
       onSubmit: (title, amount, isExpense) {
         final added = cubit.addTransaction(title, amount, isExpense);
 

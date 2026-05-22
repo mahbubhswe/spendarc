@@ -50,10 +50,6 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
     final title = _titleController.text.trim();
     final amount = double.tryParse(_amountController.text.trim()) ?? 0;
 
-    if (title.isEmpty || amount <= 0) {
-      return;
-    }
-
     final submitted = widget.onSubmit(title, amount, _isExpense);
 
     if (!submitted) {
