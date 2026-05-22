@@ -16,15 +16,9 @@ class AppSnackBar {
       SnackBar(
         duration: duration,
         behavior: SnackBarBehavior.floating,
-        content: _AppSnackBarContent(
-          message: message,
-          duration: duration,
-        ),
+        content: _AppSnackBarContent(message: message, duration: duration),
         action: actionLabel != null && onAction != null
-            ? SnackBarAction(
-                label: actionLabel,
-                onPressed: onAction,
-              )
+            ? SnackBarAction(label: actionLabel, onPressed: onAction)
             : null,
       ),
     );
@@ -35,10 +29,7 @@ class _AppSnackBarContent extends StatelessWidget {
   final String message;
   final Duration duration;
 
-  const _AppSnackBarContent({
-    required this.message,
-    required this.duration,
-  });
+  const _AppSnackBarContent({required this.message, required this.duration});
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +50,7 @@ class _AppSnackBarContent extends StatelessWidget {
                 value: value,
                 minHeight: 3,
                 backgroundColor: Colors.white24,
-                valueColor: const AlwaysStoppedAnimation<Color>(
-                  Colors.white,
-                ),
+                valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
               );
             },
           ),

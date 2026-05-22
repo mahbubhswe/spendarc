@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/app_snackbar.dart';
-import '../../../core/injection.dart';
-import '../../../core/undo_snackbar.dart';
+import '../../../di/injection.dart';
+import '../../../presentation/shared/app_snackbar.dart';
+import '../../../presentation/shared/undo_snackbar.dart';
 import '../data/transaction_model.dart';
 import 'sync_cubit.dart';
 import 'transaction_cubit.dart';
@@ -47,8 +47,9 @@ class HomePage extends StatelessWidget {
 
     cubit.deleteTransaction(transaction.id);
 
-    UndoSnackBar.showTransactionDeleted(
+    UndoSnackBar.show(
       context: context,
+      message: 'This transaction has been deleted',
       onUndo: () {
         cubit.restoreTransaction(transaction);
       },

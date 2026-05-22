@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class UndoSnackBar {
-  static void showTransactionDeleted({
+  static void show({
     required BuildContext context,
+    required String message,
     required VoidCallback onUndo,
+    String actionLabel = 'UNDO',
     Duration duration = const Duration(seconds: 3),
   }) {
     final messenger = ScaffoldMessenger.of(context);
@@ -14,15 +16,15 @@ class UndoSnackBar {
     messenger.hideCurrentSnackBar();
 
     late final ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
-        snackBarController;
+    snackBarController;
 
     snackBarController = messenger.showSnackBar(
       SnackBar(
         duration: duration,
         behavior: SnackBarBehavior.floating,
-        content: _UndoSnackBarContent(duration: duration),
+        content: _UndoSnackBarContent(message: message, duration: duration),
         action: SnackBarAction(
-          label: 'UNDO',
+          label: actionLabel,
           onPressed: () {
             isRestored = true;
             onUndo();
@@ -38,14 +40,26 @@ class UndoSnackBar {
       }
     });
   }
+
+  static void showTransactionDeleted({
+    required BuildContext context,
+    required VoidCallback onUndo,
+    Duration duration = const Duration(seconds: 3),
+  }) {
+    show(
+      context: context,
+      message: 'This transaction has been deleted',
+      onUndo: onUndo,
+      duration: duration,
+    );
+  }
 }
 
 class _UndoSnackBarContent extends StatelessWidget {
+  final String message;
   final Duration duration;
 
-  const _UndoSnackBarContent({
-    required this.duration,
-  });
+  const _UndoSnackBarContent({required this.message, required this.duration});
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +67,7 @@ class _UndoSnackBarContent extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('This transaction has been deleted'),
+        Text(message),
         const SizedBox(height: 8),
         ClipRRect(
           borderRadius: BorderRadius.circular(999),
@@ -66,9 +80,7 @@ class _UndoSnackBarContent extends StatelessWidget {
                 value: value,
                 minHeight: 3,
                 backgroundColor: Colors.white24,
-                valueColor: const AlwaysStoppedAnimation<Color>(
-                  Colors.white,
-                ),
+                valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
               );
             },
           ),

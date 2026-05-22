@@ -1,5 +1,5 @@
 import '../../../objectbox.g.dart';
-import '../../../core/objectbox_service.dart';
+import '../../../core/database/objectbox_service.dart';
 import 'transaction_model.dart';
 
 class TransactionLocalSource {

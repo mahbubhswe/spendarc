@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'core/injection.dart';
+import 'di/injection.dart';
 import 'features/transactions/presentation/home_page.dart';
 
 const Color _appBackgroundColor = Colors.white;
