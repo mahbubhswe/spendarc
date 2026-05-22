@@ -51,9 +51,20 @@ class SyncState extends Equatable {
 class SyncCubit extends Cubit<SyncState> {
   final GetPendingTransactions getPendingTransactionsUseCase;
   final UpdateTransaction updateTransactionUseCase;
+  Timer? _autoSyncTimer;
 
   SyncCubit(this.getPendingTransactionsUseCase, this.updateTransactionUseCase)
     : super(SyncState.initial());
+
+  void startAutoSyncLoop({Duration interval = const Duration(seconds: 8)}) {
+    if (_autoSyncTimer != null) {
+      return;
+    }
+
+    _autoSyncTimer = Timer.periodic(interval, (_) {
+      syncPendingTransactions();
+    });
+  }
 
   Future<void> syncPendingTransactions() async {
     if (state.isSyncing) {
@@ -82,7 +93,7 @@ class SyncCubit extends Cubit<SyncState> {
         state.copyWith(
           status: SyncStatus.offline,
           pendingCount: pendingItems.length,
-          message: 'Offline • ${pendingItems.length} pending',
+          message: 'Offline - ${pendingItems.length} pending',
         ),
       );
       return;
@@ -155,5 +166,12 @@ class SyncCubit extends Cubit<SyncState> {
     } on TimeoutException {
       return false;
     }
+  }
+
+  @override
+  Future<void> close() async {
+    _autoSyncTimer?.cancel();
+    _autoSyncTimer = null;
+    await super.close();
   }
 }

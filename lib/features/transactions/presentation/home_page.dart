@@ -64,7 +64,11 @@ class HomePage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => sl<TransactionCubit>()..loadTransactions()),
-        BlocProvider(create: (_) => sl<SyncCubit>()..syncPendingTransactions()),
+        BlocProvider(
+          create: (_) => sl<SyncCubit>()
+            ..startAutoSyncLoop()
+            ..syncPendingTransactions(),
+        ),
       ],
       child: Builder(
         builder: (context) {
